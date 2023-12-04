@@ -42,6 +42,16 @@ export default function Home() {
     return fileName;
   };
 
+  const calculateTotalMemory = () => {
+    return files.reduce((total, file) => total + file.size, 0);
+    
+  };
+
+  const calculateCurrentCost = () => {
+    const totalMemory = calculateTotalMemory();
+    const costPerMB = 0.00610351562;
+    return (totalMemory / (1024 * 1024)) * costPerMB;
+  };
   return (
     <section
       className="flex items-center justify-center h-screen"
@@ -75,37 +85,47 @@ export default function Home() {
                 <div className="mb-4 sm:mb-0">
                   {files.length > 0 ? (
                     <div>
-                    <div className="bg-gray-100 border rounded p-4 mb-4 min-w-[600px] overflow-y-auto max-h-[400px]">
-                      {files.map((file, index) => (
-                        <div key={index} className="bg-white border rounded p-4 mb-4 flex justify-between items-center">
-                          <div>
-                            <p className="text-gray-600 text-md text-left">{truncateFileName(file.name, 40)}</p>
-                            <p className="text-gray-600 text-md text-left">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                      <div className="bg-gray-100 border rounded p-4 mb-4 min-w-[600px] overflow-y-auto max-h-[400px]">
+                        {files.map((file, index) => (
+                          <div key={index} className="bg-white border rounded p-4 mb-4 flex justify-between items-center">
+                            <div>
+                              <p className="text-gray-600 text-md text-left">{truncateFileName(file.name, 40)}</p>
+                              <p className="text-gray-600 text-md text-left">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                            </div>
+                            <button
+                              className="text-red-500 hover:text-red-700 ml-16"
+                              onClick={() => handleRemoveFile(index)}
+                            >
+                              Remove
+                            </button>
                           </div>
-                          <button
-                            className="text-red-500 hover:text-red-700 ml-16"
-                            onClick={() => handleRemoveFile(index)}
+                        ))}
+                      </div>
+                      <div className="flex justify-between items-center mt-6">
+                        <div className="text-left">
+                          <p className="text-gray-600 text-md">
+                            Total Memory: {(calculateTotalMemory() / (1024 * 1024)).toFixed(2)} MB
+                          </p>
+                          <p className="text-gray-600 text-md">
+                            Current Cost: ${(calculateCurrentCost()).toFixed(3)}
+                          </p>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="fileInput"
+                            className="cursor-pointer bg-orange-400 hover:bg-orange-500 text-white py-2 px-5 border rounded inline-block font-bold mr-4"
                           >
-                            Remove
+                            Add More
+                          </label>
+                          <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} multiple />
+                          <button
+                            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 border rounded font-bold"
+                            onClick={handleSubmitClick}
+                          >
+                            Submit
                           </button>
                         </div>
-                      ))}
-                    </div>
-                    <div className="mt-6">
-                    <button
-                      className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 border rounded font-bold mr-4"
-                      onClick={handleSubmitClick}
-                    >
-                      Submit
-                    </button>
-                    <label
-                      htmlFor="fileInput"
-                      className="cursor-pointer bg-orange-400 hover:bg-orange-500 text-white py-2 px-5 border rounded inline-block font-bold"
-                    >
-                      Add More
-                    </label>
-                    <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} multiple />
-                  </div>
+                      </div>
                     </div>
                   ) : (
                     <>
@@ -125,4 +145,3 @@ export default function Home() {
     </section>
   );
 }
-

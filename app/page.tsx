@@ -96,9 +96,12 @@ export default function Home() {
                         >
                           Submit
                         </button>
-                        <label htmlFor="fileInput" className="cursor-pointer bg-orange-300 text-white py-2 px-5 border rounded-lg font-bold">
-                          Add More
-                        </label>
+                        <label
+  htmlFor="fileInput"
+  className="cursor-pointer bg-orange-300 hover:bg-orange-400 text-white py-2 px-5 border rounded-lg font-bold inline-block"
+>
+  Add More
+</label>
                         <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
                       </div>
                     </div>

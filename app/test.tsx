@@ -3,43 +3,48 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [files, setFiles] = useState([]);
+  const [fileToCompress, setFileToCompress] = useState(null);
 
   const handleFileChange = (event) => {
-    const newFile = event.target.files[0];
-    setFiles((prevFiles) => [...prevFiles, newFile]);
+    const file = event.target.files[0];
+    setFileToCompress(file);
   };
 
-  const handleRemoveFile = (index) => {
-    setFiles((prevFiles) => {
-      const updatedFiles = [...prevFiles];
-      updatedFiles.splice(index, 1);
-      return updatedFiles;
-    });
+  const handleCancelClick = () => {
+    setFileToCompress(null);
   };
 
   const handleSubmitClick = () => {
+    console.log("File submitted:", fileToCompress);
     // Add logic for submission
-    console.log("Submitted Files:", files);
   };
 
   const handleDrop = (event) => {
     event.preventDefault();
-    const newFile = event.dataTransfer.files[0];
-    setFiles((prevFiles) => [...prevFiles, newFile]);
+
+    // Get the position of the drop
+    const dropX = event.clientX;
+    const dropY = event.clientY;
+
+    // Get the position and dimensions of the label
+    const label = document.getElementById("fileLabel");
+    const labelRect = label.getBoundingClientRect();
+
+    // Check if the drop occurred within the label's boundaries
+    if (
+      dropX >= labelRect.left &&
+      dropX <= labelRect.right &&
+      dropY >= labelRect.top &&
+      dropY <= labelRect.bottom
+    ) {
+      const file = event.dataTransfer.files[0];
+      setFileToCompress(file);
+    }
   };
 
   const handleDragOver = (event) => {
     event.preventDefault();
-    // You can add styling or visual cues to indicate a valid drop target
-  };
-
-  const truncateFileName = (fileName, maxLength) => {
-    const curlen = fileName.length;
-    if (curlen > maxLength) {
-      return fileName.substring(0, maxLength * 2/5) + ".........." + fileName.substring(curlen - maxLength*2/5, curlen);
-    }
-    return fileName;
+    // Add styling or visual cues to indicate a valid drop target
   };
 
   return (
@@ -48,6 +53,7 @@ export default function Home() {
       onDrop={handleDrop}
       onDragOver={handleDragOver}
     >
+
       {/* Illustration behind hero content */}
       <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none -z-1" aria-hidden="true">
         <svg width="1360" height="578" viewBox="0 0 1360 578" xmlns="http://www.w3.org/2000/svg">
@@ -72,36 +78,26 @@ export default function Home() {
             <div className="max-w-3xl mx-auto">
               <p className="text-xl text-gray-600 mb-8" data-aos="zoom-y-out" data-aos-delay="150">Compress your files easily with our decentralized compression service. Save space and maintain the integrity of your data on Arweave.</p>
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center" data-aos="zoom-y-out" data-aos-delay="300">
-                <div className="mb-4 sm:mb-0">
-                  {files.length > 0 ? (
-                    <div className="bg-gray-100 border rounded p-4 mb-4 min-w-[600px]">
-                      {files.map((file, index) => (
-                        <div key={index} className="bg-white border rounded p-4 mb-4 flex justify-between items-center">
-                          <div>
-                            <p className="text-gray-600 text-md text-left">{truncateFileName(file.name, 40)}</p>
-                            <p className="text-gray-600 text-md text-left">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
-                          </div>
-                          <button
-                            className="text-red-500 hover:text-red-700 ml-16"
-                            onClick={() => handleRemoveFile(index)}
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      ))}
+                <div className="mb-4 sm:mb-0" onDrop={handleDrop} onDragOver={handleDragOver}>
+                  {fileToCompress ? (
+                    <>
+                      <p className="text-gray-600 text-md">Selected File: {fileToCompress.name}</p>
+                      <p className="text-gray-600 text-md">File Size: {(fileToCompress.size / (1024 * 1024)).toFixed(2)} MB</p>
                       <div className="mt-6">
                         <button
-                          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 border rounded font-bold mr-4"
+                          className="bg-transparent hover:bg-blue-500 text-blue-600 hover:text-white py-2 px-5 border border-blue-500 hover:border-transparent rounded font-bold mr-2"
+                          onClick={handleCancelClick}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 border rounded font-bold"
                           onClick={handleSubmitClick}
                         >
                           Submit
                         </button>
-                        <label htmlFor="fileInput" className="cursor-pointer bg-orange-300 text-white py-2 px-5 border rounded-lg font-bold">
-                          Add More
-                        </label>
-                        <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
                       </div>
-                    </div>
+                    </>
                   ) : (
                     <>
                       <label htmlFor="fileInput" className="cursor-pointer bg-orange-300 text-white py-24 px-48 border rounded-lg font-bold block text-2xl">

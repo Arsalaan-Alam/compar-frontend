@@ -6,8 +6,8 @@ export default function Home() {
   const [files, setFiles] = useState([]);
 
   const handleFileChange = (event) => {
-    const newFile = event.target.files[0];
-    setFiles((prevFiles) => [...prevFiles, newFile]);
+    const newFiles = event.target.files;
+    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   };
 
   const handleRemoveFile = (index) => {
@@ -25,8 +25,8 @@ export default function Home() {
 
   const handleDrop = (event) => {
     event.preventDefault();
-    const newFile = event.dataTransfer.files[0];
-    setFiles((prevFiles) => [...prevFiles, newFile]);
+    const newFiles = event.dataTransfer.files;
+    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   };
 
   const handleDragOver = (event) => {
@@ -74,7 +74,8 @@ export default function Home() {
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center" data-aos="zoom-y-out" data-aos-delay="300">
                 <div className="mb-4 sm:mb-0">
                   {files.length > 0 ? (
-                    <div className="bg-gray-100 border rounded p-4 mb-4 min-w-[600px]">
+                    <div>
+                    <div className="bg-gray-100 border rounded p-4 mb-4 min-w-[600px] overflow-y-auto max-h-[400px]">
                       {files.map((file, index) => (
                         <div key={index} className="bg-white border rounded p-4 mb-4 flex justify-between items-center">
                           <div>
@@ -89,30 +90,32 @@ export default function Home() {
                           </button>
                         </div>
                       ))}
-                      <div className="mt-6">
-                        <button
-                          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 border rounded font-bold mr-4"
-                          onClick={handleSubmitClick}
-                        >
-                          Submit
-                        </button>
-                        <label
-  htmlFor="fileInput"
-  className="cursor-pointer bg-orange-300 hover:bg-orange-400 text-white py-2 px-5 border rounded-lg font-bold inline-block"
->
-  Add More
-</label>
-                        <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
-                      </div>
+                    </div>
+                    <div className="mt-6">
+                    <button
+                      className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 border rounded font-bold mr-4"
+                      onClick={handleSubmitClick}
+                    >
+                      Submit
+                    </button>
+                    <label
+                      htmlFor="fileInput"
+                      className="cursor-pointer bg-orange-400 hover:bg-orange-500 text-white py-2 px-5 border rounded inline-block font-bold"
+                    >
+                      Add More
+                    </label>
+                    <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} multiple />
+                  </div>
                     </div>
                   ) : (
                     <>
                       <label htmlFor="fileInput" className="cursor-pointer bg-orange-300 text-white py-24 px-48 border rounded-lg font-bold block text-2xl">
                         Drag and Drop or Click to Upload
                       </label>
-                      <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
+                      <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} multiple />
                     </>
                   )}
+                  
                 </div>
               </div>
             </div>
@@ -122,3 +125,4 @@ export default function Home() {
     </section>
   );
 }
+

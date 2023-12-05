@@ -2,10 +2,12 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ArConnect } from 'arweavekit/auth'
+import { encode } from "punycode";
 
-export default function Home() {
+export default function page() {
 
   const [user, setUser] = useState({ loggedIn: null });
+  const router = useRouter();
   
   const AuthedState = () => {
     return (
@@ -18,13 +20,49 @@ export default function Home() {
   const UnauthenticatedState = () => {
     return (
       <div>
-        <button className="bg-transparent hover:bg-blue-500 text-blue-600 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded font-bold">
+        <button onClick={handleConnectWallet} className="bg-transparent hover:bg-blue-500 text-blue-600 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded font-bold">
           Connect Wallet
         </button>
       </div>
     )
   }
+  const handleConnectWallet = async () => {
+    try {
+      // Connect the wallet
+      await ArConnect.connect({
+        permissions: ["ACCESS_ADDRESS", "SIGN_TRANSACTION"],
+        appInfo: {
+          name: "CompAR",
+          // Add other app information if needed
+        },
+        // Add other parameters as needed
+      });
 
+      // Get the active wallet address after connecting
+      const address = await ArConnect.getActiveAddress();
+      setUser({ loggedIn: true, address });
+      console.log("Connected wallet address:", address);
+
+      const encodedAddress = encodeURIComponent(address);
+      const homeAddr = `/home/${encodedAddress}`
+      router.push(homeAddr);
+
+
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Check if there is a strategy connected
+    if (user.loggedIn) {
+      console.log("Wallet connected");
+      // You can redirect the user to a different page if needed
+      // router.push("/dashboard");
+    } else {
+      console.log("No connected wallet");
+    }
+  }, [user.loggedIn]);
 
   return (
     <section

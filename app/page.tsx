@@ -2,8 +2,8 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ArConnect } from 'arweavekit/auth'
-import { encode } from "punycode";
 import Dots from "./components/dots";
+import { Button } from "@/components/ui/button";
 
 export default function page() {
 
@@ -21,13 +21,12 @@ export default function page() {
   const UnauthenticatedState = () => {
     return (
       <div>
-      <button onClick={handleConnectWallet} className="bg-transparent hover:bg-blue-500 text-blue-600 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded font-bold text-lg">
+      <Button onClick={handleConnectWallet}>
         Connect Wallet
-      </button>
-      <button onClick={handleLogin} className="bg-transparent hover:bg-blue-500 text-blue-600 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded font-bold text-lg ml-2">
-        Login with Email
-      </button>
-   
+      </Button>
+      <Button onClick={handleLogin}>
+        Sign In with Email
+      </Button>
     </div>
     )
   }
@@ -74,11 +73,7 @@ export default function page() {
 
   return (
     <section
-      className="flex items-center justify-center h-screen">
-      {/* Illustration behind hero content */}
-      <Dots />
-      
-
+      className="box-border flex items-center justify-center h-screen max-w-[100vw] overflow-x-clip">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="pt-32 pb-12 md:pt-40 md:pb-20">
           <div className="text-center pb-12 md:pb-16">
@@ -88,7 +83,6 @@ export default function page() {
               <p className="text-xl text-gray-600 mb-8" data-aos="zoom-y-out" data-aos-delay="150">Compress your files easily with our decentralized compression service. Maintain access-control over your files. Save space and maintain the integrity of your data on Arweave.</p>
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center" data-aos="zoom-y-out" data-aos-delay="300">
               {user.loggedIn ? <AuthedState /> : <UnauthenticatedState /> }
-             
               </div>
             </div>
           </div>         

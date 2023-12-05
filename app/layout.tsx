@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Montserrat } from 'next/font/google'
+import { ArweaveWalletKit } from "arweave-wallet-kit";
 
 
 const montserrat = Montserrat({
@@ -23,9 +24,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
+    <ArweaveWalletKit>
     <html lang="en">
       <body className={montserrat.className}>
         {children}</body>
     </html>
+    </ArweaveWalletKit>
   )
 }

@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ArConnect } from 'arweavekit/auth'
 import { encode } from "punycode";
+import Dots from "./components/dots";
 
 export default function page() {
 
@@ -20,10 +21,14 @@ export default function page() {
   const UnauthenticatedState = () => {
     return (
       <div>
-        <button onClick={handleConnectWallet} className="bg-transparent hover:bg-blue-500 text-blue-600 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded font-bold">
-          Connect Wallet
-        </button>
-      </div>
+      <button onClick={handleConnectWallet} className="bg-transparent hover:bg-blue-500 text-blue-600 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded font-bold text-lg">
+        Connect Wallet
+      </button>
+      <button onClick={handleLogin} className="bg-transparent hover:bg-blue-500 text-blue-600 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded font-bold text-lg ml-2">
+        Login with Email
+      </button>
+   
+    </div>
     )
   }
   const handleConnectWallet = async () => {
@@ -53,6 +58,9 @@ export default function page() {
     }
   };
 
+  const handleLogin = () => {
+    router.push('/login')
+  }
   useEffect(() => {
     // Check if there is a strategy connected
     if (user.loggedIn) {
@@ -68,22 +76,7 @@ export default function page() {
     <section
       className="flex items-center justify-center h-screen">
       {/* Illustration behind hero content */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none -z-1 mb-24" aria-hidden="true">
-        <svg width="1360" height="578" viewBox="0 0 1360 578" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="illustration-01">
-              <stop stopColor="#FFF" offset="0%" />
-              <stop stopColor="#EAEAEA" offset="77.402%" />
-              <stop stopColor="#DFDFDF" offset="100%" />
-            </linearGradient>
-          </defs>
-          <g fill="url(#illustration-01)" fillRule="evenodd">
-            <circle cx="1270" cy="100" r="64" />
-            <circle cx="75" cy="500" r="64" />
-          </g>
-        </svg>
-      </div>
-
+      <Dots />
       
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
